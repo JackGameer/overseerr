@@ -115,7 +115,6 @@ const TvRequestModal = ({
           serverId: requestOverrides?.server,
           profileId: requestOverrides?.profile,
           rootFolder: requestOverrides?.folder,
-          languageProfileId: requestOverrides?.language,
           userId: requestOverrides?.user?.id,
           tags: requestOverrides?.tags,
           seasons: selectedSeasons,
@@ -185,7 +184,6 @@ const TvRequestModal = ({
           serverId: requestOverrides.server,
           profileId: requestOverrides.profile,
           rootFolder: requestOverrides.folder,
-          languageProfileId: requestOverrides.language,
           userId: requestOverrides?.user?.id,
           tags: requestOverrides.tags,
         };
@@ -704,7 +702,6 @@ const TvRequestModal = ({
                   folder: editRequest.rootFolder,
                   profile: editRequest.profileId,
                   server: editRequest.serverId,
-                  language: editRequest.languageProfileId,
                   tags: editRequest.tags,
                 }
               : undefined

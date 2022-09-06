@@ -337,7 +337,6 @@ export class MediaRequest {
         serverId: requestBody.serverId,
         profileId: requestBody.profileId,
         rootFolder: requestBody.rootFolder,
-        languageProfileId: requestBody.languageProfileId,
         tags: requestBody.tags,
         seasons: finalSeasons.map(
           (sn) =>
@@ -422,9 +421,6 @@ export class MediaRequest {
 
   @Column({ nullable: true })
   public rootFolder: string;
-
-  @Column({ nullable: true })
-  public languageProfileId: number;
 
   @Column({
     type: 'text',
@@ -945,10 +941,6 @@ export class MediaRequest {
           seriesType === 'anime' && sonarrSettings.activeAnimeProfileId
             ? sonarrSettings.activeAnimeProfileId
             : sonarrSettings.activeProfileId;
-        let languageProfile =
-          seriesType === 'anime' && sonarrSettings.activeAnimeLanguageProfileId
-            ? sonarrSettings.activeAnimeLanguageProfileId
-            : sonarrSettings.activeLanguageProfileId;
         let tags =
           seriesType === 'anime'
             ? sonarrSettings.animeTags
@@ -979,21 +971,6 @@ export class MediaRequest {
           );
         }
 
-        if (
-          this.languageProfileId &&
-          this.languageProfileId !== languageProfile
-        ) {
-          languageProfile = this.languageProfileId;
-          logger.info(
-            `Request has an override language profile ID: ${languageProfile}`,
-            {
-              label: 'Media Request',
-              requestId: this.id,
-              mediaId: this.media.id,
-            }
-          );
-        }
-
         if (this.tags && !isEqual(this.tags, tags)) {
           tags = this.tags;
           logger.info(`Request has override tags`, {
@@ -1006,7 +983,6 @@ export class MediaRequest {
 
         const sonarrSeriesOptions: AddSeriesOptions = {
           profileId: qualityProfile,
-          languageProfileId: languageProfile,
           rootFolderPath: rootFolder,
           title: series.name,
           tvdbid: tvdbId,

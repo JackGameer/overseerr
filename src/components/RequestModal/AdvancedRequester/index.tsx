@@ -32,7 +32,6 @@ const messages = defineMessages({
   default: '{name} (Default)',
   folder: '{path} ({space})',
   requestas: 'Request As',
-  languageprofile: 'Language Profile',
   tags: 'Tags',
   selecttags: 'Select tags',
   notagoptions: 'No tags.',
@@ -184,13 +183,6 @@ const AdvancedRequester = ({
             ? serverData.server.activeAnimeDirectory
             : serverData.server.activeDirectory)
       );
-      const defaultLanguage = serverData.languageProfiles?.find(
-        (language) =>
-          language.id ===
-          (isAnime && serverData.server.activeAnimeLanguageProfileId
-            ? serverData.server.activeAnimeLanguageProfileId
-            : serverData.server.activeLanguageProfileId)
-      );
       const defaultTags = isAnime
         ? serverData.server.activeAnimeTags
         : serverData.server.activeTags;
@@ -214,14 +206,6 @@ const AdvancedRequester = ({
         (!applyOverrides || !defaultOverrides.folder)
       ) {
         setSelectedFolder(defaultFolder.path ?? '');
-      }
-
-      if (
-        defaultLanguage &&
-        defaultLanguage.id !== selectedLanguage &&
-        (!applyOverrides || defaultOverrides.language === null)
-      ) {
-        setSelectedLanguage(defaultLanguage.id);
       }
 
       if (
@@ -297,7 +281,6 @@ const AdvancedRequester = ({
         (!serverData ||
           (serverData.profiles.length < 2 &&
             serverData.rootFolders.length < 2 &&
-            (serverData.languageProfiles ?? []).length < 2 &&
             !serverData.tags?.length)))) &&
     (!selectedUser || (filteredUserData ?? []).length < 2)
   ) {
@@ -439,57 +422,6 @@ const AdvancedRequester = ({
                 </select>
               </div>
             )}
-            {type === 'tv' &&
-              (isValidating ||
-                !serverData ||
-                (serverData.languageProfiles ?? []).length > 1) && (
-                <div className="mb-3 w-full flex-shrink-0 flex-grow last:pr-0 md:w-1/4 md:pr-4">
-                  <label htmlFor="language">
-                    {intl.formatMessage(messages.languageprofile)}
-                  </label>
-                  <select
-                    id="language"
-                    name="language"
-                    value={selectedLanguage}
-                    onChange={(e) =>
-                      setSelectedLanguage(parseInt(e.target.value))
-                    }
-                    onBlur={(e) =>
-                      setSelectedLanguage(parseInt(e.target.value))
-                    }
-                    className="border-gray-700 bg-gray-800"
-                    disabled={isValidating || !serverData}
-                  >
-                    {(isValidating || !serverData) && (
-                      <option value="">
-                        {intl.formatMessage(globalMessages.loading)}
-                      </option>
-                    )}
-                    {!isValidating &&
-                      serverData &&
-                      serverData.languageProfiles?.map((language) => (
-                        <option
-                          key={`folder-list${language.id}`}
-                          value={language.id}
-                        >
-                          {isAnime &&
-                          serverData.server.activeAnimeLanguageProfileId ===
-                            language.id
-                            ? intl.formatMessage(messages.default, {
-                                name: language.name,
-                              })
-                            : !isAnime &&
-                              serverData.server.activeLanguageProfileId ===
-                                language.id
-                            ? intl.formatMessage(messages.default, {
-                                name: language.name,
-                              })
-                            : language.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              )}
           </div>
         )}
         {selectedServer !== null &&
